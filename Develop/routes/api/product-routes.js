@@ -13,11 +13,7 @@ router.get('/', (req, res) => {
       },
       {
         model: Tag,
-        attributes: ['id', 'tag_name'],
-        include: {
-          model: ProductTag,
-          attributes: ['id', 'product_id', 'tag_id']
-        }
+        attributes: ['id', 'tag_name']
       },
     ]
   })
@@ -41,11 +37,8 @@ router.get('/:id', (req, res) => {
       },
       {
         model: Tag,
-        attributes: ['id', 'tag_name'],
-        include: {
-          model: ProductTag,
-          attributes: ['id', 'product_id', 'tag_id']
-        }
+        through: ProductTag,
+        as: "tags",
       },
     ]
   })
@@ -131,13 +124,13 @@ router.put('/:id', (req, res) => {
     })
     .then((updatedProductTags) => res.json(updatedProductTags))
     .catch((err) => {
-      // console.log(err);
+    
       res.status(400).json(err);
     });
 });
 
 router.delete('/:id', (req, res) => {
-  User.destroy({
+  Product.destroy({
     where: {
       id: req.params.id
     }
